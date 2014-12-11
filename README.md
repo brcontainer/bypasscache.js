@@ -16,4 +16,4 @@ Bypass cache
 
 ##Include file
 
-<script src="bypasscache.js"></script>
+`<script src="bypasscache.js"></script>`
