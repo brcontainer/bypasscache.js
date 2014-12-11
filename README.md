@@ -2,6 +2,7 @@ Bypass cache
 =========================
 
 > Note: Reload all resources and page (clear cache from this resources)
+
 > Note: This method use POST method with Ajax
 
 #Usage
