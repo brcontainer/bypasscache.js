@@ -6,12 +6,13 @@ Bypass cache
 
 #Usage
 
-##Simple usage:
+##Simple usage
 
-`ByPassCache("Clearing cache...");`
+`BypassCache("Clearing cache...");`
 
-##On click:
-`<a href="javascript:ByPassCache("Reload...");">Reload</a>`
+##On click
+`<a href="javascript:BypassCache("Reload...");">Reload</a>`
 
+##Include file
 
-
+<script src="bypasscache.js"></script>
