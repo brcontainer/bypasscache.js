@@ -1,6 +1,6 @@
 /*
- * bypasscache.js 0.0.2
- * Copyright (c) 2014 Guilherme Nascimento (brcontainer@yahoo.com.br)
+ * bypasscache.js 0.0.3
+ * Copyright (c) 2017 Guilherme Nascimento (brcontainer@yahoo.com.br)
  * Released under the MIT license
  *
  * https://github.com/brcontainer/bypass-cache
@@ -9,23 +9,25 @@
 function BypassCache(msg, onlyResources) {
     "use strict";
 
-    var s, l, j, i, rl, al, r = [];
+    var scripts, links, j, i, r = [], w = window, d = document;
 
-    rl = function (uri, c) {
+    function request(uri, callback) {
         var xhr;
-        if (window.XMLHttpRequest) {
-            xhr = new window.XMLHttpRequest();
-        } else if (window.ActiveXObject) {
-            xhr = new window.ActiveXObject("Microsoft.XMLHTTP");
+
+        if (XMLHttpRequest) {
+            xhr = new XMLHttpRequest;
+        } else if (ActiveXObject) {
+            xhr = new ActiveXObject("Microsoft.XMLHTTP");
         } else {
-            window.setTimeout(c, 1);
+            setTimeout(callback, 1);
             return;
         }
 
         xhr.open("POST", uri, true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState > 1) {
-                window.setTimeout(c, 1);
+                setTimeout(callback, 1);
+
                 if (xhr.readyState < 4) {
                     xhr.abort();
                 }
@@ -34,45 +36,37 @@ function BypassCache(msg, onlyResources) {
         xhr.send("");
     };
 
-    if (onlyResources !== true) {
-        r.push(String(window.location));
-    }
+    if (onlyResources !== true) r.push(String(w.location));
 
-    s = document.getElementsByTagName("script");
-    l = document.getElementsByTagName("link");
+    scripts = d.getElementsByTagName("script");
+    links = d.getElementsByTagName("link");
 
     i = 0;
-    for (j = s.length; i < j; i += 1) {
-        if (s[i].src) {
-            r.push(s[i].src);
-        }
+    for (j = scripts.length; i < j; i++) {
+        if (scripts[i].src) r.push(scripts[i].src);
     }
 
     i = 0;
-    for (j = l.length; i < j; i += 1) {
-        if (l[i].href) {
-            r.push(l[i].href);
-        }
+    for (j = links.length; i < j; i++) {
+        if (links[i].href) r.push(links[i].href);
     }
 
     i = -1;
     j = r.length;
 
-    if (msg && document.body) {
-        document.body.innerHTML = msg;
-    }
+    if (msg && d.body) d.body.innerHTML = msg;
 
     if (j > 0) {
-        al = function () {
-            i += 1;
+        (function check() {
+            i++;
+
             if (i < j) {
-                rl(r[i], al);
+                request(r[i], check);
             } else {
-                window.location.reload(true);
+                w.location.reload(true);
             }
-        };
-        al();
+        })();
     } else {
-        window.location.reload(true);
+        w.location.reload(true);
     }
 }

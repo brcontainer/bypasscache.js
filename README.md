@@ -5,15 +5,20 @@ Bypass cache
 
 > Note: This method use POST method with Ajax
 
-#Usage
+## Usage
 
-##Simple usage
+```javascript
+BypassCache("Clearing cache...");
+```
 
-`BypassCache("Clearing cache...");`
+## On click
 
-##On click
-`<a href="javascript:BypassCache("Reload...");">Reload</a>`
+```html
+<a href="javascript:BypassCache("Reload...");">Reload</a>
+```
 
-##Include file
+## Include file
 
-`<script src="bypasscache.js"></script>`
+```html
+<script src="bypasscache.js"></script>
+```
