@@ -14,10 +14,10 @@ function BypassCache(msg, onlyResources) {
     function request(uri, callback) {
         var xhr;
 
-        if (XMLHttpRequest) {
-            xhr = new XMLHttpRequest;
-        } else if (ActiveXObject) {
-            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+        if (w.XMLHttpRequest) {
+            xhr = new w.XMLHttpRequest();
+        } else if (w.ActiveXObject) {
+            xhr = new w.ActiveXObject("Microsoft.XMLHTTP");
         } else {
             setTimeout(callback, 1);
             return;
@@ -28,13 +28,11 @@ function BypassCache(msg, onlyResources) {
             if (xhr.readyState > 1) {
                 setTimeout(callback, 1);
 
-                if (xhr.readyState < 4) {
-                    xhr.abort();
-                }
+                if (xhr.readyState < 4) xhr.abort();
             }
         };
         xhr.send("");
-    };
+    }
 
     if (onlyResources !== true) r.push(String(w.location));
 
@@ -60,11 +58,7 @@ function BypassCache(msg, onlyResources) {
         (function check() {
             i++;
 
-            if (i < j) {
-                request(r[i], check);
-            } else {
-                w.location.reload(true);
-            }
+            (i < j) ? request(r[i], check) : w.location.reload(true);
         })();
     } else {
         w.location.reload(true);
