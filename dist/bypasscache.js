@@ -1,12 +1,12 @@
 /*
- * bypasscache.js 0.1.0
+ * Bypasscache.js 0.1.1
  * Copyright (c) 2018 Guilherme Nascimento (brcontainer@yahoo.com.br)
  * Released under the MIT license
  *
- * https://github.com/brcontainer/bypass-cache
+ * https://github.com/brcontainer/bypasscache.js
  */
 
-(function (w, d, u) {
+(function (w, d) {
     'use strict';
 
     function Reload()
@@ -19,6 +19,7 @@
         var undone = true, xhr = new w.XMLHttpRequest;
 
         xhr.open('POST', url, true);
+
         xhr.onreadystatechange = function () {
             if (xhr.readyState > 1) {
                 if (undone) setTimeout(callback, 1);
@@ -28,6 +29,7 @@
                 if (xhr.readyState < 4) xhr.abort();
             }
         };
+
         xhr.send('');
     }
 
@@ -55,6 +57,8 @@
         return urls;
     }
 
+    var q = 'link[href]';
+
     w.BypassCache = {
         'url': function (url, callback) {
             Request(url, callback);
@@ -69,19 +73,17 @@
             ClearUrls(GetUrlsByElements('script[src]', 'src'), callback);
         },
         'styles': function (callback) {
-            ClearUrls(GetUrlsByElements('link[rel=stylesheet][href]', 'href'), callback);
+            ClearUrls(GetUrlsByElements(q + '[rel~=stylesheet]', 'href'), callback);
         },
         'links': function (callback, ignoreStyles) {
-            ignoreStyles = ignoreStyles === u ? false : ignoreStyles;
+            var query = q + (ignoreStyles == true ? ':not([rel~=stylesheet])' : '');
 
-            var query = ignoreStyles ? 'link[href][rel!=stylesheet]' : 'link[href]';
-
-            ClearUrls( GetUrlsByElements(query, 'href', callback) );
+            ClearUrls(GetUrlsByElements(query, 'href'), callback);
         },
         'reload': function () {
             var urls = GetUrlsByElements('img[src], script[src], audio[src], video[src]', 'src');
 
-            urls = urls.concat(GetUrlsByElements('link[rel=stylesheet][href], link[rel~=icon][href]', 'href'));
+            urls = urls.concat(GetUrlsByElements(q + '[rel~=stylesheet], ' + q + '[rel~=icon]', 'href'));
 
             ClearUrls(urls, Reload);
         }
